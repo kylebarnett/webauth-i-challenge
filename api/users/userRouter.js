@@ -27,7 +27,7 @@ function restricted(req, res, next) {
         res.status(500).json({ message: "Unexpected error." })
       })
   } else {
-    res.status(400).json({ message: 'Please provide username and password.' })
+    res.status(400).json({ message: 'You shall not pass!' })
   }
 }
 
