@@ -14,7 +14,7 @@ router.post('/register', (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(500).json({message: error});
+      res.status(500).json({ message: error });
     });
 })
 
@@ -33,6 +33,18 @@ router.post('/login', (req, res) => {
     .catch(error => {
       res.status(500).json(error);
     });
+})
+
+router.get('/logout', (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        res.json({ message: 'You can checkout but you can\'t leave' })
+      } else {
+        res.json({message: 'You\'ve been logged out.'}).end()
+      }
+    })
+  }
 })
 
 module.exports = router
