@@ -3,14 +3,18 @@ const bcrypt = require('bcryptjs');
 const Users = require('../users/userModel');
 
 router.post('/register', (req, res) => {
-  const user = req.body;
-  user.password = bcrypt.hashSync(user.password, 10)
+  console.log(req.body)
+  let user = req.body;
+  const hash = bcrypt.hashSync(user.password, 10);
+  user.password = hash;
   Users.add(user)
     .then(saved => {
+      req.session.user = saved;
       res.status(201).json(saved);
     })
     .catch(error => {
-      res.status(500).json(error);
+      console.log(error)
+      res.status(500).json({message: error});
     });
 })
 
@@ -20,6 +24,7 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user;
         res.status(200).json({ message: `Welcome ${user.username}!` });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
